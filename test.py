@@ -22,25 +22,10 @@ def parse_args():
     return parser.parse_args()
 
 def super_resolve_image(model, image_path, scale_factor, device):
-    """
-    Super-resolve a single image using the trained SRCNN model.
-
-    Args:
-        model (torch.nn.Module): Trained SRCNN model.
-        image_path (str): Path to the input image.
-        scale_factor (int): Upscaling factor.
-        device (torch.device): Device to perform computation on.
-
-    Returns:
-        sr_image (PIL.Image.Image): Super-resolved image.
-        lr_image (PIL.Image.Image): Low-resolution image (input to the model).
-        hr_image (PIL.Image.Image): High-resolution ground truth image (if available).
-    """
     model.eval()
     with torch.no_grad():
         hr_image = Image.open(image_path).convert('RGB')
         
-        # Generate low-resolution image
         lr_image = hr_image.resize(
             (hr_image.width // scale_factor, hr_image.height // scale_factor),
             Image.BICUBIC
