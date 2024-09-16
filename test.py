@@ -148,7 +148,6 @@ def main():
     
     else:
         print("No action specified. Please provide either --image_path for a single image or --test_dir for a directory of images.")
-        print("Use -h or --help for more information.")
 
 if __name__ == '__main__':
     main()
