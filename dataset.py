@@ -22,13 +22,10 @@ class SRDataset(Dataset):
 
     def __getitem__(self, idx):
         hr_image = Image.open(self.hr_image_filenames[idx]).convert('RGB')
-        
-        # Ensure the HR image is large enough
         min_size = self.patch_size * self.scale_factor
         if hr_image.width < min_size or hr_image.height < min_size:
             hr_image = hr_image.resize((min_size, min_size), Image.BICUBIC)
         
-        # Randomly crop a patch from HR image
         left = torch.randint(0, hr_image.width - self.patch_size * self.scale_factor + 1, (1,)).item()
         upper = torch.randint(0, hr_image.height - self.patch_size * self.scale_factor + 1, (1,)).item()
         hr_patch = hr_image.crop((
@@ -38,13 +35,12 @@ class SRDataset(Dataset):
             upper + self.patch_size * self.scale_factor
         ))
         
-        # Downsample HR patch to create LR patch
         lr_patch = hr_patch.resize(
             (self.patch_size, self.patch_size),
             Image.BICUBIC
         )
         
-        # Upsample LR patch back to HR size
+ 
         lr_patch_upsampled = lr_patch.resize(
             (self.patch_size * self.scale_factor, self.patch_size * self.scale_factor),
             Image.BICUBIC
